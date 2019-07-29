@@ -11,4 +11,8 @@ class Recipe
   def done?
     @done
   end
+
+  def mark_as_done!
+    @done = true
+  end
 end

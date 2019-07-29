@@ -18,6 +18,14 @@ class Cookbook
     update_csv
   end
 
+  def mark_recipe_as_done(index)
+    # We get the recipe by index
+    @recipes[index].mark_as_done!
+
+    # We call this to update our csv with the new mark
+    update_csv
+  end
+
   def all
     @recipes
   end
