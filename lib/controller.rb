@@ -17,8 +17,16 @@ class Controller
     recipe_name        = @view.ask_for("name")
     # Prompt user for recipe description <-- View
     recipe_description = @view.ask_for("description")
+    # Prompt user for recipe prep_time <-- View
+    recipe_prep_time   = @view.ask_for("preparation time")
+    binding.pry
+    recipe_attributes = {
+      name: recipe_name,
+      description: recipe_description,
+      prep_time: recipe_prep_time
+    }
     # Instantiate a recipe               <-- Recipe
-    recipe = Recipe.new(recipe_name, recipe_description)
+    recipe = Recipe.new(recipe_attributes)
     # Store it                           <-- Cookbook
     @cookbook.add_recipe(recipe)
   end
