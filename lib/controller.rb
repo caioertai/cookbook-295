@@ -1,6 +1,7 @@
 require 'open-uri'
 require 'nokogiri'
 require_relative "view"
+require_relative "scrape_service"
 
 class Controller
   def initialize(cookbook)
@@ -47,23 +48,11 @@ class Controller
     # 1. Ask the user for an ingredient
     ingredient = @view.ask_for("ingredient")
 
-    # 2. Open and read the page with the ingredient search results
-    query_url = "http://www.letscookfrench.com/recipes/find-recipe.aspx?aqt=#{ingredient}"
-    page_string = open(query_url).read
-
-    # 3. Parse the html text using Nokogiri
-    doc = Nokogiri::HTML(page_string)
-
-    # 4. Look at the page structure and use Nokogiri methods to
-    #    find the relevant info
-    recipe_elements = doc.search('.m_contenu_resultat').first(5)
-
-    # 5. Create an array of recipes
-    recipes = recipe_elements.map do |recipe_element|
-      name = recipe_element.at('.m_titre_resultat').text.strip
-      description = recipe_element.at('.m_texte_resultat').text.strip
-      Recipe.new(name, description)
-    end
+    # 2. Ask the ScrapeService for an array of recipes
+    #    We move the "logic" behind the scraping to its own class. The
+    #    controller is supposed to give orders around. It's the brains of the
+    #    operation, not the brawn.
+    recipes = ScrapeService.new(ingredient).call
 
     # 6. Display recipes to the user
     @view.display(recipes)
